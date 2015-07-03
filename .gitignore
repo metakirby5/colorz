@@ -59,3 +59,6 @@ target/
 # Images
 *.jpg
 *.png
+
+# HTML
+*.html
