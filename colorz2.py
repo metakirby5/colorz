@@ -1,7 +1,7 @@
 from PIL import Image, ImageColor
 from itertools import chain
 from numpy import array
-from scipy.cluster.vq import kmeans2 as kmeans
+from scipy.cluster.vq import kmeans
 from colorsys import rgb_to_hsv, hsv_to_rgb
 
 THUMB_SIZE = (200, 200)
