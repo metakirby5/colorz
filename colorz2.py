@@ -50,6 +50,8 @@ def colorz(filename, n=6, min_v=170, max_v=200, bold_add=40):
   Clamps value to between min_v and max_v.
   Creates bold colors using bold_add.
   Total number of colors returned is 2*n, ordered by hue.
+  For terminal colors, the hue order is:
+  red, yellow, green, cyan, blue, magenta
   """
   img = Image.open(filename)
   img.thumbnail(THUMB_SIZE)
