@@ -1,13 +1,10 @@
 from PIL import Image, ImageColor
 from itertools import chain
 from numpy import array
-from scipy.cluster.vq import kmeans
+from scipy.cluster.vq import kmeans2 as kmeans
 from colorsys import rgb_to_hsv, hsv_to_rgb
 
 THUMB_SIZE = (200, 200)
-COLORS = [ImageColor.getrgb(s) for s in [
-  'black', 'red', 'green', 'yellow', 'blue', 'magenta', 'cyan', 'white',
-]]
 SCALE = 256.0
 down_scale = lambda x: x / SCALE
 up_scale = lambda x: int(x * SCALE)
@@ -32,6 +29,14 @@ def clamp(color, min_v, max_v):
   v = min(max(min_v, v), max_v)
   return tuple(map(up_scale, hsv_to_rgb(h, s, v)))
 
+def order_by_hue(colors):
+  """
+  Orders colors by hue.
+  """
+  hsvs = [rgb_to_hsv(*map(down_scale, color)) for color in colors]
+  hsvs.sort(key=lambda t: t[0])
+  return [tuple(map(up_scale, hsv_to_rgb(*hsv))) for hsv in hsvs]
+
 def brighten(color, brightness):
   """
   Adds or subtracts value to a color.
@@ -39,22 +44,23 @@ def brighten(color, brightness):
   h, s, v = rgb_to_hsv(*map(down_scale, color))
   return tuple(map(up_scale, hsv_to_rgb(h, s, v + down_scale(brightness))))
 
-def colorz(filename, min_v=80, max_v=160, bold_add=80):
+def colorz(filename, n=6, min_v=170, max_v=200, bold_add=40):
   """
-  Get the dominant colors of an image, using the terminal colors
-  as guesses. Clamps value to between min_v and max_v.
+  Get the n most dominant colors of an image.
+  Clamps value to between min_v and max_v.
   Creates bold colors using bold_add.
+  Total number of colors returned is 2*n, ordered by hue.
   """
   img = Image.open(filename)
   img.thumbnail(THUMB_SIZE)
 
   obs = array(get_colors(img))
-  guess = array(COLORS)
-  clusters, _ = kmeans(obs, guess)
+  clusters, _ = kmeans(obs, n)
   clamped = [clamp(color, min_v, max_v) for color in clusters]
+  ordered = order_by_hue(clamped)
   return reduce(
     lambda l, c: l + [c, brighten(c, bold_add)],
-    clamped, []
+    ordered, []
   )
 
 def html_preview(filename, colors, bg='#272727'):
