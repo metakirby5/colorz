@@ -16,7 +16,7 @@ def get_colors(img):
   """
   w, h = img.size
   return list(chain(*(
-    [color] * count
+    [color[:3]] * count
     for count, color in img.getcolors(w * h)
   )))
 
