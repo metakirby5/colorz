@@ -15,10 +15,7 @@ def get_colors(img):
   Returns a list of all the image's colors with multiplicity.
   """
   w, h = img.size
-  return list(chain(*(
-    [color[:3]] * count
-    for count, color in img.getcolors(w * h)
-  )))
+  return [color[:3] for count, color in img.getcolors(w * h)]
 
 def clamp(color, min_v, max_v):
   """
