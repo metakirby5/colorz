@@ -1,8 +1,24 @@
+#!/usr/bin/env python2
+
+description = """
+A color scheme generator.
+"""
+
+import os
+import webbrowser
+from tempfile import NamedTemporaryFile
+from argparse import ArgumentParser
 from PIL import Image, ImageColor
 from itertools import chain
 from numpy import array
 from scipy.cluster.vq import kmeans
 from colorsys import rgb_to_hsv, hsv_to_rgb
+
+DEFAULT_NUM_COLORS = 6
+DEFAULT_MINV = 170
+DEFAULT_MAXV = 200
+DEFAULT_BOLD_ADD = 40
+DEFAULT_BG = '#272727'
 
 THUMB_SIZE = (200, 200)
 SCALE = 256.0
@@ -41,7 +57,11 @@ def brighten(color, brightness):
   h, s, v = rgb_to_hsv(*map(down_scale, color))
   return tuple(map(up_scale, hsv_to_rgb(h, s, v + down_scale(brightness))))
 
-def colorz(filename, n=6, min_v=170, max_v=200, bold_add=40):
+def colorz(filename,
+           n=DEFAULT_NUM_COLORS,
+           min_v=DEFAULT_MINV,
+           max_v=DEFAULT_MAXV,
+           bold_add=DEFAULT_BOLD_ADD):
   """
   Get the n most dominant colors of an image.
   Clamps value to between min_v and max_v.
@@ -62,23 +82,79 @@ def colorz(filename, n=6, min_v=170, max_v=200, bold_add=40):
     ordered, []
   )
 
-def html_preview(filename, colors, bg='#272727'):
+def html_preview(fp, colors, bg=DEFAULT_BG):
   """
   Creates an html preview of each color.
   """
-  with open(filename, 'w') as f:
+  # Create the main body
+  body = '\n'.join(map(lambda c: """
+    <div style="color: {0}">
+      {0}
+    </div>
+  """.format(hexify(c)), colors))
 
-    # Create the main body
-    body = '\n'.join(map(lambda c: """
-      <div style="color: {0}">
-        {0}
-      </div>
-    """.format(hexify(c)), colors))
-
-    # Write the file
-    f.write("""
+  # Write the file
+  fp.write("""
+    <!DOCTYPE html>
+    <html>
+      <head>
+        <title>
+          Colorscheme Preview
+        </title>
+      </head>
       <body style="background-color: {bg}; font-size: 2em">
         {body}
       </body>
-    """.format(bg=bg, body=body))
+    </html>
+  """.format(bg=bg, body=body))
 
+def parse_args():
+  parser = ArgumentParser(description=description)
+  parser.add_argument('image',
+                      help="""
+                      the image file to generate from.
+                      """,
+                      type=str)
+  parser.add_argument('-n',
+                      help="""
+                      number of colors to generate.
+                      """,
+                      dest='num_colors',
+                      type=int,
+                      default=DEFAULT_NUM_COLORS)
+  parser.add_argument('--minv',
+                      help="""
+                      minimum value for the colors.
+                      """,
+                      type=int,
+                      default=DEFAULT_MINV)
+  parser.add_argument('--maxv',
+                      help="""
+                      maximum value for the colors.
+                      """,
+                      type=int,
+                      default=DEFAULT_MAXV)
+  parser.add_argument('--bold',
+                      help="""
+                      how much value to add for bold colors.
+                      """,
+                      default=DEFAULT_BOLD_ADD)
+  parser.add_argument('--bg',
+                      help="""
+                      what background color to use, in hex format.
+                      """,
+                      default=DEFAULT_BG)
+
+  return parser.parse_args()
+
+def main():
+  args = parse_args()
+  f = NamedTemporaryFile(suffix='.html', delete=False)
+  colors = colorz(args.image, args.num_colors, args.minv, args.maxv,
+                  args.bold)
+  html_preview(f, colors, args.bg)
+  webbrowser.open('file://%s' % f.name)
+
+# Main program: generate a temporary html preview, show it, then toss it
+if __name__ == '__main__':
+  main()
