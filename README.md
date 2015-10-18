@@ -3,7 +3,7 @@ Color scheme generator.
 
 ![Shinobu and Miku](https://u.teknik.io/SkxEfz.png)
 
-![Miku and Sonico](https://u.teknik.io/jVbhmm.png)
+![Miku and Sonico](https://u.teknik.io/OICaW1.png)
 
 # Dependencies
 - Pillow
