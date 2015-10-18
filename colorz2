@@ -19,6 +19,7 @@ DEFAULT_NUM_COLORS = 6
 DEFAULT_MINV = 170
 DEFAULT_MAXV = 200
 DEFAULT_BOLD_ADD = 40
+DEFAULT_FONT_SIZE = 1
 DEFAULT_BG = '#272727'
 
 THUMB_SIZE = (200, 200)
@@ -83,7 +84,8 @@ def colorz(filename,
     ordered, []
   )
 
-def html_preview(fp, colors, bg=DEFAULT_BG, bg_img=None):
+def html_preview(fp, colors, font_size=DEFAULT_FONT_SIZE,
+                 bg=DEFAULT_BG, bg_img=None):
   """
   Creates an html preview of each color.
   """
@@ -91,7 +93,7 @@ def html_preview(fp, colors, bg=DEFAULT_BG, bg_img=None):
   body = '\n'.join(map(lambda c: """
     <div style="display: inline-block; float: left; margin: 1rem;
                 text-align: center; color: {color}">
-      <div>
+      <div style="margin-bottom: 1rem;">
          &nbsp;&nbsp;&nbsp;▄▄▄&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br />
          &nbsp;&nbsp;▀█▀██&nbsp;&nbsp;▄&nbsp;<br />
          ▀▄██████▀&nbsp;&nbsp;<br />
@@ -108,12 +110,13 @@ def html_preview(fp, colors, bg=DEFAULT_BG, bg_img=None):
     # Add a "terminal window" to the body
     body = """
     <div style="text-align: center">
-      <div style="background: {bg}; opacity: 0.95; padding: 1rem;
+      <div style="background: {bg}; padding: 1rem;
                   display:inline-block; width: 75%">
+        <img src="{bg_img}" style="width: 100%" />
         {body}
       </div>
     </div>
-    """.format(bg=bg, body=body)
+    """.format(bg=bg, bg_img=bg_img, body=body)
 
     # Change the root bg to the bg_img
     if os.path.isfile(bg_img):
@@ -137,12 +140,14 @@ def html_preview(fp, colors, bg=DEFAULT_BG, bg_img=None):
                   background-repeat: no-repeat;
                   background-position: center center;
                   background-attachment: fixed;
-                  padding: 1rem;
-                  font-family: monospace; font-size: 2rem; line-height: 1">
-        {body}
+                  font-family: monospace; font-size: {font_size}rem;
+                  line-height: 1">
+        <div style="padding: 1rem; display: inline-block">
+          {body}
+        </div>
       </body>
     </html>
-  """.format(bg=bg, body=body))
+  """.format(font_size=font_size, bg=bg, bg_img=bg_img, body=body))
 
 def parse_args():
   parser = ArgumentParser(description=description)
@@ -175,18 +180,24 @@ def parse_args():
                       how much value to add for bold colors.
                       """,
                       default=DEFAULT_BOLD_ADD)
+  parser.add_argument('--font-size',
+                      help="""
+                      what font size to use, in rem.
+                      """,
+                      type=int,
+                      default=DEFAULT_FONT_SIZE)
   parser.add_argument('--bg',
                       help="""
                       what background color to use, in hex format.
                       """,
                       default=DEFAULT_BG)
-  parser.add_argument('--bg-img',
+  parser.add_argument('--no-bg-img',
                       help="""
                       whether or not to use a background image in the
                       preview.
                       """,
                       action='store_true',
-                      default=None)
+                      default=False)
 
   return parser.parse_args()
 
@@ -195,8 +206,8 @@ def main():
   f = NamedTemporaryFile(suffix='.html', delete=False)
   colors = colorz(args.image, args.num_colors, args.minv, args.maxv,
                   args.bold)
-  html_preview(f, colors, args.bg,
-               os.path.abspath(args.image) if args.bg_img else None)
+  html_preview(f, colors, args.font_size, args.bg,
+               os.path.abspath(args.image) if not args.no_bg_img else None)
   webbrowser.open('file://%s' % f.name)
 
 # Main program: generate a temporary html preview, show it, then toss it

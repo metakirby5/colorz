@@ -4,21 +4,25 @@ Color scheme generator.
 # Usage
 ```
 usage: colorz2 [-h] [-n NUM_COLORS] [--minv MINV] [--maxv MAXV] [--bold BOLD]
-               [--bg BG]
+               [--font-size FONT_SIZE] [--bg BG] [--no-bg-img]
                image
 
 A color scheme generator.
 
 positional arguments:
-  image          the image file to generate from.
+  image                 the image file to generate from.
 
 optional arguments:
-  -h, --help     show this help message and exit
-  -n NUM_COLORS  number of colors to generate.
-  --minv MINV    minimum value for the colors.
-  --maxv MAXV    maximum value for the colors.
-  --bold BOLD    how much value to add for bold colors.
-  --bg BG        what background color to use, in hex format.
+  -h, --help            show this help message and exit
+  -n NUM_COLORS         number of colors to generate.
+  --minv MINV           minimum value for the colors.
+  --maxv MAXV           maximum value for the colors.
+  --bold BOLD           how much value to add for bold colors.
+  --font-size FONT_SIZE
+                        what font size to use, in rem.
+  --bg BG               what background color to use, in hex format.
+  --no-bg-img           whether or not to use a background image in the
+                        preview.
 ```
 
 ## To do
