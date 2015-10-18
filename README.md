@@ -1,6 +1,11 @@
 # colorz2
 Color scheme generator.
 
+# Dependencies
+- Pillow
+- Numpy
+- Scipy
+
 # Usage
 ```
 usage: colorz2 [-h] [-n NUM_COLORS] [--minv MINV] [--maxv MAXV] [--bold BOLD]
