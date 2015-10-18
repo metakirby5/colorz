@@ -1,4 +1,5 @@
 #!/usr/bin/env python2
+# -*- coding: utf-8 -*-
 
 description = """
 A color scheme generator.
@@ -82,27 +83,62 @@ def colorz(filename,
     ordered, []
   )
 
-def html_preview(fp, colors, bg=DEFAULT_BG):
+def html_preview(fp, colors, bg=DEFAULT_BG, bg_img=None):
   """
   Creates an html preview of each color.
   """
   # Create the main body
   body = '\n'.join(map(lambda c: """
-    <div style="color: {0}">
-      {0}
+    <div style="display: inline-block; float: left; margin: 1rem;
+                text-align: center; color: {color}">
+      <div>
+         &nbsp;&nbsp;&nbsp;▄▄▄&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br />
+         &nbsp;&nbsp;▀█▀██&nbsp;&nbsp;▄&nbsp;<br />
+         ▀▄██████▀&nbsp;&nbsp;<br />
+         &nbsp;&nbsp;&nbsp;▀█████&nbsp;&nbsp;<br />
+         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;▀▀▀▀▄<br />
+      </div>
+      {color}
     </div>
-  """.format(hexify(c)), colors))
+  """.format(color=hexify(c)), colors))
+
+  # Change background if needed
+  if bg_img:
+
+    # Add a "terminal window" to the body
+    body = """
+    <div style="text-align: center">
+      <div style="background: {bg}; opacity: 0.95; padding: 1rem;
+                  display:inline-block; width: 75%">
+        {body}
+      </div>
+    </div>
+    """.format(bg=bg, body=body)
+
+    # Change the root bg to the bg_img
+    if os.path.isfile(bg_img):
+      bg = "url('file://%s')" % bg_img
+    else:
+      bg = "url('%s')" % bg_img
 
   # Write the file
   fp.write("""
     <!DOCTYPE html>
-    <html>
+    <html style="height: 100%">
       <head>
         <title>
           Colorscheme Preview
         </title>
+        <meta charset="utf-8">
       </head>
-      <body style="background-color: {bg}; font-size: 2em">
+      <body style="background: {bg};
+                  height: 100%;
+                  background-size: cover;
+                  background-repeat: no-repeat;
+                  background-position: center center;
+                  background-attachment: fixed;
+                  padding: 1rem;
+                  font-family: monospace; font-size: 2rem; line-height: 1">
         {body}
       </body>
     </html>
@@ -144,6 +180,13 @@ def parse_args():
                       what background color to use, in hex format.
                       """,
                       default=DEFAULT_BG)
+  parser.add_argument('--bg-img',
+                      help="""
+                      whether or not to use a background image in the
+                      preview.
+                      """,
+                      action='store_true',
+                      default=None)
 
   return parser.parse_args()
 
@@ -152,7 +195,8 @@ def main():
   f = NamedTemporaryFile(suffix='.html', delete=False)
   colors = colorz(args.image, args.num_colors, args.minv, args.maxv,
                   args.bold)
-  html_preview(f, colors, args.bg)
+  html_preview(f, colors, args.bg,
+               os.path.abspath(args.image) if args.bg_img else None)
   webbrowser.open('file://%s' % f.name)
 
 # Main program: generate a temporary html preview, show it, then toss it
