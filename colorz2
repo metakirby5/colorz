@@ -115,8 +115,14 @@ def html_preview(fp, colors, font_size=DEFAULT_FONT_SIZE,
     body = """
     <div style="text-align: center">
       <div style="background: {bg}; padding: 1rem;
-                  display:inline-block; width: 75%">
-        <img src="{bg_img}" style="width: 100%" />
+                  display:inline-block; width: 75%;
+                  -webkit-box-shadow: 0 0 1em 0 rgba(0, 0, 0, 0.75);
+                  -moz-box-shadow:    0 0 1em 0 rgba(0, 0, 0, 0.75);
+                  box-shadow:         0 0 1em 0 rgba(0, 0, 0, 0.75);">
+        <img src="{bg_img}" style="width: 100%;
+                  -webkit-box-shadow: 0 0 1em 0 rgba(0, 0, 0, 0.75);
+                  -moz-box-shadow:    0 0 1em 0 rgba(0, 0, 0, 0.75);
+                  box-shadow:         0 0 1em 0 rgba(0, 0, 0, 0.75);" />
         {body}
       </div>
     </div>
