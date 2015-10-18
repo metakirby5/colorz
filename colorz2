@@ -71,8 +71,11 @@ def colorz(filename,
   """
   Get the n most dominant colors of an image.
   Clamps value to between min_v and max_v.
+
   Creates bold colors using bold_add.
   Total number of colors returned is 2*n, ordered by hue.
+  Returns as a list of pairs.
+
   For terminal colors, the hue order is:
   red, yellow, green, cyan, blue, magenta
   """
@@ -83,10 +86,7 @@ def colorz(filename,
   clusters, _ = kmeans(obs.astype(float), n)
   clamped = [clamp(color, min_v, max_v) for color in clusters]
   ordered = order_by_hue(clamped)
-  return reduce(
-    lambda l, c: l + [c, brighten(c, bold_add)],
-    ordered, []
-  )
+  return zip(ordered, [brighten(c, bold_add) for c in ordered])
 
 def html_preview(fp, colors, font_size=DEFAULT_FONT_SIZE,
                  bg=DEFAULT_BG, bg_img=None):
@@ -104,9 +104,14 @@ def html_preview(fp, colors, font_size=DEFAULT_FONT_SIZE,
          &nbsp;&nbsp;&nbsp;▀█████&nbsp;&nbsp;<br />
          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;▀▀▀▀▄<br />
       </div>
-      {color}
+      <div>
+        {color}
+      </div>
+      <div style="color: {color_bold}">
+        <strong>{color_bold}</strong>
+      </div>
     </div>
-  """.format(color=hexify(c)), colors))
+  """.format(color=hexify(c[0]), color_bold=hexify(c[1])), colors))
 
   # Change background if needed
   if bg_img:
@@ -213,7 +218,7 @@ def parse_args():
 
 def main():
   args = parse_args()
-  f = NamedTemporaryFile(suffix='.html', delete=False)
+  f = NamedTemporaryFile(mode='wt', suffix='.html', delete=False)
   colors = colorz(args.image, args.num_colors, args.minv, args.maxv,
                   args.bold)
   html_preview(f, colors, args.font_size, args.bg,
