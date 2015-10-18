@@ -3,6 +3,10 @@
 
 description = """
 A color scheme generator.
+
+Takes an image and grabs the most dominant colors using kmeans.
+Also creates bold colors by adding value to the dominant colors.
+Finally, generates an HTML preview of the color scheme.
 """
 
 import os

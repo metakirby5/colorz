@@ -12,7 +12,9 @@ usage: colorz2 [-h] [-n NUM_COLORS] [--minv MINV] [--maxv MAXV] [--bold BOLD]
                [--font-size FONT_SIZE] [--bg BG] [--no-bg-img]
                image
 
-A color scheme generator.
+A color scheme generator. Takes an image and grabs the most dominant colors
+using kmeans. Also creates bold colors by adding value to the dominant colors.
+Finally, generates an HTML preview of the color scheme.
 
 positional arguments:
   image                 the image file to generate from.
