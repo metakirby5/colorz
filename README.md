@@ -25,7 +25,7 @@ positional arguments:
 
 optional arguments:
   -h, --help            show this help message and exit
-  -n NUM_COLORS         number of colors to generate.
+  -n NUM_COLORS         number of colors to generate (excluding bold).
   --minv MINV           minimum value for the colors.
   --maxv MAXV           maximum value for the colors.
   --bold BOLD           how much value to add for bold colors.

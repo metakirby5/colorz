@@ -80,7 +80,7 @@ def colorz(filename,
   img.thumbnail(THUMB_SIZE)
 
   obs = array(get_colors(img))
-  clusters, _ = kmeans(obs, n)
+  clusters, _ = kmeans(obs.astype(float), n)
   clamped = [clamp(color, min_v, max_v) for color in clusters]
   ordered = order_by_hue(clamped)
   return reduce(
@@ -168,7 +168,7 @@ def parse_args():
                       type=str)
   parser.add_argument('-n',
                       help="""
-                      number of colors to generate.
+                      number of colors to generate (excluding bold).
                       """,
                       dest='num_colors',
                       type=int,
