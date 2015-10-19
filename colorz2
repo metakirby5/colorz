@@ -4,17 +4,20 @@
 description = """
 A color scheme generator.
 
-Takes an image and grabs the most dominant colors using kmeans.
+Takes an image (local or online) and grabs the most dominant colors
+using kmeans.
 Also creates bold colors by adding value to the dominant colors.
 Finally, generates an HTML preview of the color scheme.
 """
 
 import os
 import webbrowser
+from io import BytesIO
+from urllib2 import urlopen
+from itertools import chain
 from tempfile import NamedTemporaryFile
 from argparse import ArgumentParser
 from PIL import Image, ImageColor
-from itertools import chain
 from numpy import array
 from scipy.cluster.vq import kmeans
 from colorsys import rgb_to_hsv, hsv_to_rgb
@@ -63,7 +66,7 @@ def brighten(color, brightness):
   h, s, v = rgb_to_hsv(*map(down_scale, color))
   return tuple(map(up_scale, hsv_to_rgb(h, s, v + down_scale(brightness))))
 
-def colorz(filename,
+def colorz(fd,
            n=DEFAULT_NUM_COLORS,
            min_v=DEFAULT_MINV,
            max_v=DEFAULT_MAXV,
@@ -79,7 +82,7 @@ def colorz(filename,
   For terminal colors, the hue order is:
   red, yellow, green, cyan, blue, magenta
   """
-  img = Image.open(filename)
+  img = Image.open(fd)
   img.thumbnail(THUMB_SIZE)
 
   obs = array(get_colors(img))
@@ -88,7 +91,7 @@ def colorz(filename,
   ordered = order_by_hue(clamped)
   return zip(ordered, [brighten(c, bold_add) for c in ordered])
 
-def html_preview(fp, colors, font_size=DEFAULT_FONT_SIZE,
+def html_preview(fd, colors, font_size=DEFAULT_FONT_SIZE,
                  bg=DEFAULT_BG, bg_img=None):
   """
   Creates an html preview of each color.
@@ -116,6 +119,10 @@ def html_preview(fp, colors, font_size=DEFAULT_FONT_SIZE,
   # Change background if needed
   if bg_img:
 
+    # Check if local or online image
+    if os.path.isfile(bg_img):
+      bg_img = os.path.abspath(bg_img)
+
     # Add a "terminal window" to the body
     body = """
       <div style="background: {bg}; padding: 1rem;
@@ -129,16 +136,14 @@ def html_preview(fp, colors, font_size=DEFAULT_FONT_SIZE,
                   box-shadow:         0 0 1em 0 rgba(0, 0, 0, 0.75);" />
         {body}
       </div>
-    """.format(bg=bg, bg_img=bg_img, body=body)
+    """.format(**locals())
 
     # Change the root bg to the bg_img
-    if os.path.isfile(bg_img):
-      bg = "url('file://%s')" % bg_img
-    else:
-      bg = "url('%s')" % bg_img
+    bg = "url('%s')" % (
+      ('file://%s' % bg_img) if os.path.isfile(bg_img) else bg_img)
 
   # Write the file
-  fp.write("""
+  fd.write("""
     <!DOCTYPE html>
     <html>
       <head>
@@ -159,54 +164,63 @@ def html_preview(fp, colors, font_size=DEFAULT_FONT_SIZE,
         </div>
       </body>
     </html>
-  """.format(font_size=font_size, bg=bg, bg_img=bg_img, body=body))
+  """.format(**locals()))
 
 def parse_args():
   parser = ArgumentParser(description=description)
   parser.add_argument('image',
                       help="""
-                      the image file to generate from.
+                      the image file or url to generate from.
                       """,
                       type=str)
   parser.add_argument('-n',
                       help="""
                       number of colors to generate (excluding bold).
-                      """,
+                      Default: %s
+                      """ % DEFAULT_NUM_COLORS,
                       dest='num_colors',
                       type=int,
                       default=DEFAULT_NUM_COLORS)
   parser.add_argument('--minv',
                       help="""
                       minimum value for the colors.
-                      """,
+                      Default: %s
+                      """ % DEFAULT_MINV,
                       type=int,
                       default=DEFAULT_MINV)
   parser.add_argument('--maxv',
                       help="""
                       maximum value for the colors.
-                      """,
+                      Default: %s
+                      """ % DEFAULT_MAXV,
                       type=int,
                       default=DEFAULT_MAXV)
   parser.add_argument('--bold',
                       help="""
                       how much value to add for bold colors.
-                      """,
+                      Default: %s
+                      """ % DEFAULT_BOLD_ADD,
+                      type=int,
                       default=DEFAULT_BOLD_ADD)
   parser.add_argument('--font-size',
                       help="""
                       what font size to use, in rem.
-                      """,
+                      Default: %s
+                      """ % DEFAULT_FONT_SIZE,
                       type=int,
                       default=DEFAULT_FONT_SIZE)
   parser.add_argument('--bg',
                       help="""
                       what background color to use, in hex format.
-                      """,
+                      Default: %s
+                      """ % DEFAULT_BG,
+                      type=str,
                       default=DEFAULT_BG)
   parser.add_argument('--no-bg-img',
                       help="""
                       whether or not to use a background image in the
                       preview.
+                      Default: background image on
                       """,
                       action='store_true',
                       default=False)
@@ -215,12 +229,17 @@ def parse_args():
 
 def main():
   args = parse_args()
-  f = NamedTemporaryFile(mode='wt', suffix='.html', delete=False)
-  colors = colorz(args.image, args.num_colors, args.minv, args.maxv,
+  html_fd = NamedTemporaryFile(mode='wt', suffix='.html', delete=False)
+
+  # Open local file or online file
+  img_fd = open(args.image) if os.path.isfile(args.image) else \
+    BytesIO(urlopen(args.image).read())
+
+  colors = colorz(img_fd, args.num_colors, args.minv, args.maxv,
                   args.bold)
-  html_preview(f, colors, args.font_size, args.bg,
-               os.path.abspath(args.image) if not args.no_bg_img else None)
-  webbrowser.open('file://%s' % f.name)
+  html_preview(html_fd, colors, args.font_size, args.bg,
+               args.image if not args.no_bg_img else None)
+  webbrowser.open('file://%s' % html_fd.name)
 
 # Main program: generate a temporary html preview, show it, then toss it
 if __name__ == '__main__':
