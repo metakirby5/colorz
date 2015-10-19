@@ -96,7 +96,7 @@ def html_preview(fp, colors, font_size=DEFAULT_FONT_SIZE,
   # Create the main body
   body = '\n'.join(map(lambda c: """
     <div style="display: inline-block; float: left; margin: 1rem;
-                text-align: center; color: {color}">
+                color: {color}">
       <div style="margin-bottom: 1rem;">
          &nbsp;&nbsp;&nbsp;▄▄▄&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br />
          &nbsp;&nbsp;▀█▀██&nbsp;&nbsp;▄&nbsp;<br />
@@ -118,7 +118,6 @@ def html_preview(fp, colors, font_size=DEFAULT_FONT_SIZE,
 
     # Add a "terminal window" to the body
     body = """
-    <div style="text-align: center">
       <div style="background: {bg}; padding: 1rem;
                   display:inline-block; width: 75%;
                   -webkit-box-shadow: 0 0 1em 0 rgba(0, 0, 0, 0.75);
@@ -130,7 +129,6 @@ def html_preview(fp, colors, font_size=DEFAULT_FONT_SIZE,
                   box-shadow:         0 0 1em 0 rgba(0, 0, 0, 0.75);" />
         {body}
       </div>
-    </div>
     """.format(bg=bg, bg_img=bg_img, body=body)
 
     # Change the root bg to the bg_img
@@ -142,7 +140,7 @@ def html_preview(fp, colors, font_size=DEFAULT_FONT_SIZE,
   # Write the file
   fp.write("""
     <!DOCTYPE html>
-    <html style="height: 100%">
+    <html>
       <head>
         <title>
           Colorscheme Preview
@@ -150,14 +148,13 @@ def html_preview(fp, colors, font_size=DEFAULT_FONT_SIZE,
         <meta charset="utf-8">
       </head>
       <body style="background: {bg};
-                  height: 100%;
                   background-size: cover;
                   background-repeat: no-repeat;
                   background-position: center center;
                   background-attachment: fixed;
                   font-family: monospace; font-size: {font_size}rem;
                   line-height: 1">
-        <div style="padding: 1rem; display: inline-block">
+        <div style="padding: 1rem; text-align: center">
           {body}
         </div>
       </body>
