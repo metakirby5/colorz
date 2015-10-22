@@ -190,7 +190,6 @@ def html_preview(fd, colors, font_size=DEFAULT_FONT_SIZE,
 
     .color {{
       display: inline-block;
-      float: left;
       margin: 1rem;
     }}
 
