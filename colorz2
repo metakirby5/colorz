@@ -153,11 +153,11 @@ def html_preview(fd, colors, font_size=DEFAULT_FONT_SIZE,
         background-position: center center;
         background-attachment: fixed;
 
-        -webkit-filter: blur(30px);
-        -moz-filter: blur(30px);
-        -o-filter: blur(30px);
-        -ms-filter: blur(30px);
-        filter: blur(30px)
+        -webkit-filter: blur(2rem);
+        -moz-filter: blur(2rem);
+        -o-filter: blur(2rem);
+        -ms-filter: blur(2rem);
+        filter: blur(2rem)
       }}
     """.format(**locals())
 
