@@ -153,11 +153,11 @@ def html_preview(fd, colors, font_size=DEFAULT_FONT_SIZE,
         background-position: center center;
         background-attachment: fixed;
 
-        -webkit-filter: blur(10px);
-        -moz-filter: blur(10px);
-        -o-filter: blur(10px);
-        -ms-filter: blur(10px);
-        filter: blur(10px)
+        -webkit-filter: blur(30px);
+        -moz-filter: blur(30px);
+        -o-filter: blur(30px);
+        -ms-filter: blur(30px);
+        filter: blur(30px)
       }}
     """.format(**locals())
 
@@ -178,9 +178,9 @@ def html_preview(fd, colors, font_size=DEFAULT_FONT_SIZE,
     }}
 
     #preview-box {{
-      padding: 1rem;
       display: inline-block;
-      width: 75%;
+      margin: 3rem;
+      padding: 1rem;
       background: {bg_color};
     }}
 
