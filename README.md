@@ -13,7 +13,7 @@ Color scheme generator.
 # Usage
 ```
 usage: colorz2 [-h] [-n NUM_COLORS] [--minv MINV] [--maxv MAXV] [--bold BOLD]
-               [--font-size FONT_SIZE] [--bg BG] [--no-bg-img]
+               [--font-size FONT_SIZE] [--bg-color BG_COLOR] [--no-bg-img]
                image
 
 A color scheme generator. Takes an image (local or online) and grabs the most
@@ -32,7 +32,7 @@ optional arguments:
   --bold BOLD           how much value to add for bold colors. Default: 40
   --font-size FONT_SIZE
                         what font size to use, in rem. Default: 1
-  --bg BG               what background color to use, in hex format. Default:
+  --bg-color BG_COLOR   what background color to use, in hex format. Default:
                         #272727
   --no-bg-img           whether or not to use a background image in the
                         preview. Default: background image on

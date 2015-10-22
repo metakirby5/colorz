@@ -27,7 +27,7 @@ DEFAULT_MINV = 170
 DEFAULT_MAXV = 200
 DEFAULT_BOLD_ADD = 40
 DEFAULT_FONT_SIZE = 1
-DEFAULT_BG = '#272727'
+DEFAULT_BG_COLOR = '#272727'
 
 THUMB_SIZE = (200, 200)
 SCALE = 256.0
@@ -92,15 +92,18 @@ def colorz(fd,
   return zip(ordered, [brighten(c, bold_add) for c in ordered])
 
 def html_preview(fd, colors, font_size=DEFAULT_FONT_SIZE,
-                 bg=DEFAULT_BG, bg_img=None):
+                 bg_color=DEFAULT_BG_COLOR, bg_img=None):
   """
   Creates an html preview of each color.
   """
+
+  # Initial CSS styling is empty
+  style = ""
+
   # Create the main body
   body = '\n'.join(map(lambda c: """
-    <div style="display: inline-block; float: left; margin: 1rem;
-                color: {color}">
-      <div style="margin-bottom: 1rem;">
+    <div class="color" style="color: {color}">
+      <div class="ghost">
          &nbsp;&nbsp;&nbsp;▄▄▄&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br />
          &nbsp;&nbsp;▀█▀██&nbsp;&nbsp;▄&nbsp;<br />
          ▀▄██████▀&nbsp;&nbsp;<br />
@@ -116,31 +119,91 @@ def html_preview(fd, colors, font_size=DEFAULT_FONT_SIZE,
     </div>
   """.format(color=hexify(c[0]), color_bold=hexify(c[1])), colors))
 
-  # Change background if needed
   if bg_img:
-
     # Check if local or online image
     if os.path.isfile(bg_img):
       bg_img = os.path.abspath(bg_img)
 
-    # Add a "terminal window" to the body
+    bg_url = "url('%s')" % (
+      ('file://%s' % bg_img) if os.path.isfile(bg_img) else bg_img)
+
+    # Add preview box and image to the body
     body = """
-      <div style="background: {bg}; padding: 1rem;
-                  display:inline-block; width: 75%;
-                  -webkit-box-shadow: 0 0 1em 0 rgba(0, 0, 0, 0.75);
-                  -moz-box-shadow:    0 0 1em 0 rgba(0, 0, 0, 0.75);
-                  box-shadow:         0 0 1em 0 rgba(0, 0, 0, 0.75);">
-        <img src="{bg_img}" style="width: 100%;
-                  -webkit-box-shadow: 0 0 1em 0 rgba(0, 0, 0, 0.75);
-                  -moz-box-shadow:    0 0 1em 0 rgba(0, 0, 0, 0.75);
-                  box-shadow:         0 0 1em 0 rgba(0, 0, 0, 0.75);" />
+      <div id="preview-box" class="box-shadow">
+        <img id="preview-image" class="box-shadow" src="{bg_img}" />
         {body}
       </div>
     """.format(**locals())
 
-    # Change the root bg to the bg_img
-    bg = "url('%s')" % (
-      ('file://%s' % bg_img) if os.path.isfile(bg_img) else bg_img)
+    # Add blurred background image styling
+    style += """
+      body:before {{
+        content: '';
+        position: fixed;
+        z-index: -1;
+        left: 0;
+        right: 0;
+        width: 100%;
+        height: 100%;
+        display: block;
+
+        background-image: {bg_url};
+        background-size: cover;
+        background-repeat: no-repeat;
+        background-position: center center;
+        background-attachment: fixed;
+
+        -webkit-filter: blur(10px);
+        -moz-filter: blur(10px);
+        -o-filter: blur(10px);
+        -ms-filter: blur(10px);
+        filter: blur(10px)
+      }}
+    """.format(**locals())
+
+  # CSS styling
+  style += """
+    body {{
+      margin: 0;
+      background: {bg_color};
+
+      font-family: monospace;
+      font-size: {font_size}rem;
+      line-height: 1;
+    }}
+
+    #main-container {{
+      padding: 1rem;
+      text-align: center;
+    }}
+
+    #preview-box {{
+      padding: 1rem;
+      display: inline-block;
+      width: 75%;
+      background: {bg_color};
+    }}
+
+    #preview-image {{
+      width: 100%;
+    }}
+
+    .color {{
+      display: inline-block;
+      float: left;
+      margin: 1rem;
+    }}
+
+    .ghost {{
+      margin-bottom: 1rem;
+    }}
+
+    .box-shadow {{
+      -webkit-box-shadow: 0 0 1em 0 rgba(0, 0, 0, 0.75);
+      -moz-box-shadow:    0 0 1em 0 rgba(0, 0, 0, 0.75);
+      box-shadow:         0 0 1em 0 rgba(0, 0, 0, 0.75);
+    }}
+  """.format(**locals())
 
   # Write the file
   fd.write("""
@@ -151,15 +214,12 @@ def html_preview(fd, colors, font_size=DEFAULT_FONT_SIZE,
           Colorscheme Preview
         </title>
         <meta charset="utf-8">
+        <style>
+          {style}
+        </style>
       </head>
-      <body style="background: {bg};
-                  background-size: cover;
-                  background-repeat: no-repeat;
-                  background-position: center center;
-                  background-attachment: fixed;
-                  font-family: monospace; font-size: {font_size}rem;
-                  line-height: 1">
-        <div style="padding: 1rem; text-align: center">
+      <body>
+        <div id="main-container">
           {body}
         </div>
       </body>
@@ -209,13 +269,13 @@ def parse_args():
                       """ % DEFAULT_FONT_SIZE,
                       type=int,
                       default=DEFAULT_FONT_SIZE)
-  parser.add_argument('--bg',
+  parser.add_argument('--bg-color',
                       help="""
                       what background color to use, in hex format.
                       Default: %s
-                      """ % DEFAULT_BG,
+                      """ % DEFAULT_BG_COLOR,
                       type=str,
-                      default=DEFAULT_BG)
+                      default=DEFAULT_BG_COLOR)
   parser.add_argument('--no-bg-img',
                       help="""
                       whether or not to use a background image in the
@@ -237,7 +297,7 @@ def main():
 
   colors = colorz(img_fd, args.num_colors, args.minv, args.maxv,
                   args.bold)
-  html_preview(html_fd, colors, args.font_size, args.bg,
+  html_preview(html_fd, colors, args.font_size, args.bg_color,
                args.image if not args.no_bg_img else None)
   webbrowser.open('file://%s' % html_fd.name)
 
