@@ -39,6 +39,8 @@ optional arguments:
 ```
 
 ## To do
+- Custom implementation of kmeans - repel from bgc,
+attract to default term colors
 - Change the name
 - Put on pip and start a new themer repo
 - http://charlesleifer.com/blog/using-python-to-generate-awesome-linux-desktop-themes/
