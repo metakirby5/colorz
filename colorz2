@@ -73,13 +73,14 @@ def colorz(fd,
            n=DEFAULT_NUM_COLORS,
            min_v=DEFAULT_MINV,
            max_v=DEFAULT_MAXV,
-           bold_add=DEFAULT_BOLD_ADD):
+           bold_add=DEFAULT_BOLD_ADD,
+           order_colors=True):
   """
   Get the n most dominant colors of an image.
   Clamps value to between min_v and max_v.
 
   Creates bold colors using bold_add.
-  Total number of colors returned is 2*n, ordered by hue.
+  Total number of colors returned is 2*n, optionally ordered by hue.
   Returns as a list of pairs of RGB triples.
 
   For terminal colors, the hue order is:
@@ -91,8 +92,8 @@ def colorz(fd,
   obs = array(get_colors(img))
   clusters, _ = kmeans(obs.astype(float), n)
   clamped = [clamp(color, min_v, max_v) for color in clusters]
-  ordered = order_by_hue(clamped)
-  return zip(ordered, [brighten(c, bold_add) for c in ordered])
+  colors = order_by_hue(clamped) if order_colors else clamped
+  return zip(colors, [brighten(c, bold_add) for c in colors])
 
 def html_preview(colors, font_size=DEFAULT_FONT_SIZE,
                  bg_color=DEFAULT_BG_COLOR, bg_img=None,
