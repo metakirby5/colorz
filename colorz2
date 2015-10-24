@@ -7,7 +7,10 @@ A color scheme generator.
 Takes an image (local or online) and grabs the most dominant colors
 using kmeans.
 Also creates bold colors by adding value to the dominant colors.
-Finally, generates an HTML preview of the color scheme.
+
+Finally, outputs the colors to stdout
+(one normal and one bold per line, space delmited) and
+generates an HTML preview of the color scheme.
 """
 
 import os
@@ -77,7 +80,7 @@ def colorz(fd,
 
   Creates bold colors using bold_add.
   Total number of colors returned is 2*n, ordered by hue.
-  Returns as a list of pairs.
+  Returns as a list of pairs of RGB triples.
 
   For terminal colors, the hue order is:
   red, yellow, green, cyan, blue, magenta
@@ -105,7 +108,7 @@ def html_preview(colors, font_size=DEFAULT_FONT_SIZE,
   style = ""
 
   # Create the main body
-  body = '\n'.join(map(lambda c: """
+  body = '\n'.join(["""
     <div class="color" style="color: {color}">
       <div class="ghost">
          &nbsp;&nbsp;&nbsp;▄▄▄&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br />
@@ -121,7 +124,7 @@ def html_preview(colors, font_size=DEFAULT_FONT_SIZE,
         <strong>{color_bold}</strong>
       </div>
     </div>
-  """.format(color=hexify(c[0]), color_bold=hexify(c[1])), colors))
+  """.format(color=hexify(c[0]), color_bold=hexify(c[1])) for c in colors])
 
   if bg_img:
     # Check if local or online image
@@ -289,6 +292,13 @@ def parse_args():
                       """,
                       action='store_true',
                       default=False)
+  parser.add_argument('--no-preview',
+                      help="""
+                      whether or not to generate and show the preview.
+                      Default: preview on
+                      """,
+                      action='store_true',
+                      default=False)
 
   return parser.parse_args()
 
@@ -301,9 +311,14 @@ def main():
     BytesIO(urlopen(args.image).read())
 
   colors = colorz(img_fd, args.num_colors, args.minv, args.maxv, args.bold)
-  html_fd = html_preview(colors, args.font_size, args.bg_color,
-               args.image if not args.no_bg_img else None)
-  webbrowser.open('file://%s' % html_fd.name)
+
+  for pair in colors:
+    print('%s %s' % tuple(map(hexify, pair)))
+
+  if not args.no_preview:
+    html_fd = html_preview(colors, args.font_size, args.bg_color,
+                 args.image if not args.no_bg_img else None)
+    webbrowser.open('file://%s' % html_fd.name)
 
 if __name__ == '__main__':
   main()

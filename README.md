@@ -14,11 +14,14 @@ Color scheme generator.
 ```
 usage: colorz2 [-h] [-n NUM_COLORS] [--minv MINV] [--maxv MAXV] [--bold BOLD]
                [--font-size FONT_SIZE] [--bg-color BG_COLOR] [--no-bg-img]
+               [--no-preview]
                image
 
 A color scheme generator. Takes an image (local or online) and grabs the most
 dominant colors using kmeans. Also creates bold colors by adding value to the
-dominant colors. Finally, generates an HTML preview of the color scheme.
+dominant colors. Finally, outputs the colors to stdout (one normal and one
+bold per line, space delmited) and generates an HTML preview of the color
+scheme.
 
 positional arguments:
   image                 the image file or url to generate from.
@@ -36,6 +39,8 @@ optional arguments:
                         #272727
   --no-bg-img           whether or not to use a background image in the
                         preview. Default: background image on
+  --no-preview          whether or not to generate and show the preview.
+                        Default: preview on
 ```
 
 ## To do
