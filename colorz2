@@ -91,10 +91,14 @@ def colorz(fd,
   ordered = order_by_hue(clamped)
   return zip(ordered, [brighten(c, bold_add) for c in ordered])
 
-def html_preview(fd, colors, font_size=DEFAULT_FONT_SIZE,
-                 bg_color=DEFAULT_BG_COLOR, bg_img=None):
+def html_preview(colors, font_size=DEFAULT_FONT_SIZE,
+                 bg_color=DEFAULT_BG_COLOR, bg_img=None,
+                 fd=NamedTemporaryFile(mode='wt', suffix='.html',
+                                       delete=False)):
   """
-  Creates an html preview of each color.
+  Creates an HTML preview of each color.
+
+  Returns the Python file object for the HTML file.
   """
 
   # Initial CSS styling is empty
@@ -225,6 +229,8 @@ def html_preview(fd, colors, font_size=DEFAULT_FONT_SIZE,
     </html>
   """.format(**locals()))
 
+  return fd
+
 def parse_args():
   parser = ArgumentParser(description=description)
   parser.add_argument('image',
@@ -286,20 +292,18 @@ def parse_args():
 
   return parser.parse_args()
 
+# Main program: generate a temporary html preview, show it, then toss it
 def main():
   args = parse_args()
-  html_fd = NamedTemporaryFile(mode='wt', suffix='.html', delete=False)
 
   # Open local file or online file
   img_fd = open(args.image) if os.path.isfile(args.image) else \
     BytesIO(urlopen(args.image).read())
 
-  colors = colorz(img_fd, args.num_colors, args.minv, args.maxv,
-                  args.bold)
-  html_preview(html_fd, colors, args.font_size, args.bg_color,
+  colors = colorz(img_fd, args.num_colors, args.minv, args.maxv, args.bold)
+  html_fd = html_preview(colors, args.font_size, args.bg_color,
                args.image if not args.no_bg_img else None)
   webbrowser.open('file://%s' % html_fd.name)
 
-# Main program: generate a temporary html preview, show it, then toss it
 if __name__ == '__main__':
   main()
