@@ -319,7 +319,16 @@ def main():
   if not args.no_preview:
     html_fd = html_preview(colors, args.font_size, args.bg_color,
                  args.image if not args.no_bg_img else None)
-    webbrowser.open('file://%s' % html_fd.name)
+
+    # Suppress stdout from browser
+    # http://stackoverflow.com/a/2323563
+    saveout = os.dup(1)
+    os.close(1)
+    os.open(os.devnull, os.O_RDWR)
+    try:
+      webbrowser.open('file://%s' % html_fd.name)
+    finally:
+      os.dup2(saveout,1)
 
 if __name__ == '__main__':
   main()
