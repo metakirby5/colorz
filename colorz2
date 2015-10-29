@@ -16,7 +16,6 @@ generates an HTML preview of the color scheme.
 import os
 import webbrowser
 from io import BytesIO
-from urllib2 import urlopen
 from itertools import chain
 from tempfile import NamedTemporaryFile
 from argparse import ArgumentParser
@@ -24,6 +23,12 @@ from PIL import Image, ImageColor
 from numpy import array
 from scipy.cluster.vq import kmeans
 from colorsys import rgb_to_hsv, hsv_to_rgb
+
+# Python3 compatibility
+try:
+  from urllib2 import urlopen
+except ImportError:
+  from urllib.request import urlopen
 
 DEFAULT_NUM_COLORS = 6
 DEFAULT_MINV = 170
@@ -89,11 +94,11 @@ def colorz(fd,
   img = Image.open(fd)
   img.thumbnail(THUMB_SIZE)
 
-  obs = array(get_colors(img))
-  clusters, _ = kmeans(obs.astype(float), n)
-  clamped = [clamp(color, min_v, max_v) for color in clusters]
-  colors = order_by_hue(clamped) if order_colors else clamped
-  return zip(colors, [brighten(c, bold_add) for c in colors])
+  obs = get_colors(img)
+  clamped = [clamp(color, min_v, max_v) for color in obs]
+  clusters, _ = kmeans(array(clamped).astype(float), n)
+  colors = order_by_hue(clusters) if order_colors else clusters
+  return list(zip(colors, [brighten(c, bold_add) for c in colors]))
 
 def html_preview(colors, font_size=DEFAULT_FONT_SIZE,
                  bg_color=DEFAULT_BG_COLOR, bg_img=None,
@@ -331,13 +336,9 @@ def main():
 
     # Suppress stdout from browser
     # http://stackoverflow.com/a/2323563
-    saveout = os.dup(1)
     os.close(1)
-    os.open(os.devnull, os.O_RDWR)
-    try:
-      webbrowser.open('file://%s' % html_fd.name)
-    finally:
-      os.dup2(saveout,1)
+    os.close(2)
+    webbrowser.open('file://%s' % html_fd.name)
 
 if __name__ == '__main__':
   main()
