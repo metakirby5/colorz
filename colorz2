@@ -237,11 +237,13 @@ def html_preview(colors, font_size=DEFAULT_FONT_SIZE,
 
 def parse_args():
   parser = ArgumentParser(description=description)
+
   parser.add_argument('image',
                       help="""
                       the image file or url to generate from.
                       """,
                       type=str)
+
   parser.add_argument('-n',
                       help="""
                       number of colors to generate (excluding bold).
@@ -250,6 +252,7 @@ def parse_args():
                       dest='num_colors',
                       type=int,
                       default=DEFAULT_NUM_COLORS)
+
   parser.add_argument('--minv',
                       help="""
                       minimum value for the colors.
@@ -257,6 +260,7 @@ def parse_args():
                       """ % DEFAULT_MINV,
                       type=int,
                       default=DEFAULT_MINV)
+
   parser.add_argument('--maxv',
                       help="""
                       maximum value for the colors.
@@ -264,6 +268,7 @@ def parse_args():
                       """ % DEFAULT_MAXV,
                       type=int,
                       default=DEFAULT_MAXV)
+
   parser.add_argument('--bold',
                       help="""
                       how much value to add for bold colors.
@@ -271,6 +276,7 @@ def parse_args():
                       """ % DEFAULT_BOLD_ADD,
                       type=int,
                       default=DEFAULT_BOLD_ADD)
+
   parser.add_argument('--font-size',
                       help="""
                       what font size to use, in rem.
@@ -278,6 +284,7 @@ def parse_args():
                       """ % DEFAULT_FONT_SIZE,
                       type=int,
                       default=DEFAULT_FONT_SIZE)
+
   parser.add_argument('--bg-color',
                       help="""
                       what background color to use, in hex format.
@@ -285,6 +292,7 @@ def parse_args():
                       """ % DEFAULT_BG_COLOR,
                       type=str,
                       default=DEFAULT_BG_COLOR)
+
   parser.add_argument('--no-bg-img',
                       help="""
                       whether or not to use a background image in the
@@ -293,6 +301,7 @@ def parse_args():
                       """,
                       action='store_true',
                       default=False)
+
   parser.add_argument('--no-preview',
                       help="""
                       whether or not to generate and show the preview.
