@@ -6,6 +6,7 @@ Color scheme generator.
 ![Miku and Sonico](https://u.teknik.io/OICaW1.png)
 
 # Dependencies
+- Python 2
 - Pillow
 - Numpy
 - Scipy
