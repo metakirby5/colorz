@@ -1,9 +1,7 @@
 # colorz2
 Color scheme generator.
 
-![Shinobu and Miku](https://u.teknik.io/SkxEfz.png)
-
-![Miku and Sonico](https://u.teknik.io/OICaW1.png)
+![Sample usage](https://u.teknik.io/h9HQwd.png)
 
 # Dependencies
 - Python 2
