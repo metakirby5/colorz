@@ -15,6 +15,7 @@ generates an HTML preview of the color scheme.
 
 import os
 import webbrowser
+from sys import exit
 from io import BytesIO
 from itertools import chain
 from tempfile import NamedTemporaryFile
@@ -322,8 +323,12 @@ def main():
   args = parse_args()
 
   # Open local file or online file
-  img_fd = open(args.image) if os.path.isfile(args.image) else \
-    BytesIO(urlopen(args.image).read())
+  try:
+    img_fd = open(args.image) if os.path.isfile(args.image) else \
+      BytesIO(urlopen(args.image).read())
+  except ValueError:
+    print("%s was not a valid URL." % args.image)
+    exit(1)
 
   colors = colorz(img_fd, args.num_colors, args.minv, args.maxv, args.bold)
 
