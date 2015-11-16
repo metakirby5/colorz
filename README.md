@@ -19,7 +19,7 @@ usage: colorz2 [-h] [-n NUM_COLORS] [--minv MINV] [--maxv MAXV] [--bold BOLD]
 A color scheme generator. Takes an image (local or online) and grabs the most
 dominant colors using kmeans. Also creates bold colors by adding value to the
 dominant colors. Finally, outputs the colors to stdout (one normal and one
-bold per line, space delmited) and generates an HTML preview of the color
+bold per line, space delimited) and generates an HTML preview of the color
 scheme.
 
 positional arguments:
