@@ -20,7 +20,7 @@ from io import BytesIO
 from itertools import chain
 from tempfile import NamedTemporaryFile
 from argparse import ArgumentParser
-from PIL import Image, ImageColor
+from PIL import Image
 from numpy import array
 from scipy.cluster.vq import kmeans
 from colorsys import rgb_to_hsv, hsv_to_rgb
