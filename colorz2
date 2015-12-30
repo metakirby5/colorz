@@ -17,7 +17,6 @@ import os
 import webbrowser
 from sys import exit
 from io import BytesIO
-from itertools import chain
 from tempfile import NamedTemporaryFile
 from argparse import ArgumentParser
 from PIL import Image
@@ -46,7 +45,7 @@ hexify = lambda rgb: '#%s' % ''.join('%02x' % p for p in rgb)
 
 def get_colors(img):
   """
-  Returns a list of all the image's colors with multiplicity.
+  Returns a list of all the image's colors.
   """
   w, h = img.size
   return [color[:3] for count, color in img.convert('RGB').getcolors(w * h)]
