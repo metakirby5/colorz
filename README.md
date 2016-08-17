@@ -1,7 +1,7 @@
 # colorz2
 Color scheme generator.
 
-![Sample usage](https://u.teknik.io/h9HQwd.png)
+![Sample usage](https://ptpb.pw/xSFj.png)
 
 # Dependencies
 - Python 2
