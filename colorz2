@@ -116,18 +116,11 @@ def html_preview(colors, font_size=DEFAULT_FONT_SIZE,
   # Create the main body
   body = '\n'.join(["""
     <div class="color" style="color: {color}">
-      <div class="ghost">
-         &nbsp;&nbsp;&nbsp;▄▄▄&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br />
-         &nbsp;&nbsp;▀█▀██&nbsp;&nbsp;▄&nbsp;<br />
-         ▀▄██████▀&nbsp;&nbsp;<br />
-         &nbsp;&nbsp;&nbsp;▀█████&nbsp;&nbsp;<br />
-         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;▀▀▀▀▄<br />
-      </div>
       <div>
-        {color}
+        █ {color}
       </div>
       <div style="color: {color_bold}">
-        <strong>{color_bold}</strong>
+        <strong>█ {color_bold}</strong>
       </div>
     </div>
   """.format(color=hexify(c[0]), color_bold=hexify(c[1])) for c in colors])
@@ -204,10 +197,6 @@ def html_preview(colors, font_size=DEFAULT_FONT_SIZE,
     .color {{
       display: inline-block;
       margin: 1rem;
-    }}
-
-    .ghost {{
-      margin-bottom: 1rem;
     }}
 
     .box-shadow {{
