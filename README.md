@@ -1,15 +1,18 @@
 # colorz2
+
 Color scheme generator.
 
 ![Sample usage](https://ptpb.pw/xSFj.png)
 
-# Dependencies
+## Dependencies
+
 - Python 2
 - Pillow
 - Numpy
 - Scipy
 
-# Usage
+## Usage
+
 ```
 usage: colorz2 [-h] [-n NUM_COLORS] [--minv MINV] [--maxv MAXV] [--bold BOLD]
                [--font-size FONT_SIZE] [--bg-color BG_COLOR] [--no-bg-img]
@@ -41,14 +44,6 @@ optional arguments:
   --no-preview          whether or not to generate and show the preview.
                         Default: preview on
 ```
-
-## To do
-- Custom implementation of kmeans - repel from bgc,
-attract to default term colors
-- Change the name
-- Put on pip and start a new themer repo
-- http://charlesleifer.com/blog/using-python-to-generate-awesome-linux-desktop-themes/
-- https://gist.github.com/coleifer/9fbab2d19a337512ab2a
 
 ## Thanks to
 - http://charlesleifer.com/blog/using-python-and-k-means-to-find-the-dominant-colors-in-images/
