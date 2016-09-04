@@ -1,34 +1,38 @@
-# colorz2
+========
+ colorz
+========
 
 Color scheme generator.
 
-![Sample usage](https://ptpb.pw/xSFj.png)
+|Sample Usage|
 
-## Dependencies
+Dependencies
+------------
 
-- Python 2
+- Python (2 or 3)
 - Pillow
-- Numpy
-- Scipy
+- scipy
 
-## Usage
+Usage
+-----
 
-```
-usage: colorz2 [-h] [-n NUM_COLORS] [--minv MINV] [--maxv MAXV] [--bold BOLD]
-               [--font-size FONT_SIZE] [--bg-color BG_COLOR] [--no-bg-img]
-               [--no-preview]
-               image
+::
 
-A color scheme generator. Takes an image (local or online) and grabs the most
-dominant colors using kmeans. Also creates bold colors by adding value to the
-dominant colors. Finally, outputs the colors to stdout (one normal and one
-bold per line, space delimited) and generates an HTML preview of the color
-scheme.
+  usage: colorz [-h] [-n NUM_COLORS] [--minv MINV] [--maxv MAXV] [--bold BOLD]
+              [--font-size FONT_SIZE] [--bg-color BG_COLOR] [--no-bg-img]
+              [--no-preview]
+              image
 
-positional arguments:
+  A color scheme generator. Takes an image (local or online) and grabs the most
+  dominant colors using kmeans. Also creates bold colors by adding value to the
+  dominant colors. Finally, outputs the colors to stdout (one normal and one
+  bold per line, space delimited) and generates an HTML preview of the color
+  scheme.
+
+  positional arguments:
   image                 the image file or url to generate from.
 
-optional arguments:
+  optional arguments:
   -h, --help            show this help message and exit
   -n NUM_COLORS         number of colors to generate (excluding bold).
                         Default: 6
@@ -43,8 +47,13 @@ optional arguments:
                         preview. Default: background image on
   --no-preview          whether or not to generate and show the preview.
                         Default: preview on
-```
 
-## Thanks to
+Thanks to
+---------
+
 - http://charlesleifer.com/blog/using-python-and-k-means-to-find-the-dominant-colors-in-images/
 - https://gist.github.com/radiosilence/3946121
+
+.. |Sample Usage| image:: https://ptpb.pw/xSFj.png
+   :target: https://ptpb.pw/xSFj.png
+   :alt: Color preview.
