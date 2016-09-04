@@ -11,7 +11,7 @@ with codecs.open(path.join(here, 'README.rst'), encoding='utf-8') as f:
 
 setup(
     name='colorz',
-    version='1.0.0',
+    version='1.0.1',
     description='Color scheme generator.',
     long_description=long_description,
     url='https://github.com/metakirby5/colorz',
@@ -33,7 +33,6 @@ setup(
     keywords='colorz color scheme theme generator',
     py_modules=['colorz'],
     install_requires=[
-        'argparse',
         'Pillow',
         'scipy',
     ],
