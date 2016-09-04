@@ -2,9 +2,20 @@
  colorz
 ========
 
+|Sample Usage|
+
 Color scheme generator.
 
-|Sample Usage|
+Installation
+------------
+
+::
+
+   pip install colorz
+
+or just move ``colorz.py`` to somewhere in your ``$PATH``.
+If you do the latter, you must install the dependencies in the
+following section manually.
 
 Dependencies
 ------------
