@@ -54,6 +54,6 @@ Thanks to
 - http://charlesleifer.com/blog/using-python-and-k-means-to-find-the-dominant-colors-in-images/
 - https://gist.github.com/radiosilence/3946121
 
-.. |Sample Usage| image:: https://ptpb.pw/xSFj.png
+.. |Sample Usage| image:: http://i.imgur.com/QVLSXqK.png
    :target: https://ptpb.pw/xSFj.png
    :alt: Color preview.
