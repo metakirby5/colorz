@@ -312,7 +312,7 @@ def main():
 
   # Open local file or online file
   try:
-    img_fd = open(args.image) if os.path.isfile(args.image) else \
+    img_fd = open(args.image, 'rb') if os.path.isfile(args.image) else \
       BytesIO(urlopen(args.image).read())
   except ValueError:
     print("%s was not a valid URL." % args.image)
