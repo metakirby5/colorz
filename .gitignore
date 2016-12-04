@@ -55,10 +55,3 @@ docs/_build/
 
 # PyBuilder
 target/
-
-# Images
-*.jpg
-*.png
-
-# HTML
-*.html

@@ -66,5 +66,5 @@ Thanks to
 - https://gist.github.com/radiosilence/3946121
 
 .. |Sample Usage| image:: http://i.imgur.com/QVLSXqK.png
-   :target: https://ptpb.pw/xSFj.png
+   :target: colorz.png
    :alt: Color preview.
