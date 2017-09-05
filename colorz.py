@@ -128,9 +128,7 @@ def html_preview(colors, font_size=DEFAULT_FONT_SIZE,
     # Create the main body
     body = '\n'.join(["""
         <div class="color" style="color: {color}">
-            <div>
-                █ {color}
-            </div>
+            <div>█ {color}</div>
             <div style="color: {color_bold}">
                 <strong>█ {color_bold}</strong>
             </div>
