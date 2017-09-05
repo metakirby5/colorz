@@ -11,7 +11,7 @@ with codecs.open(path.join(here, 'README.rst'), encoding='utf-8') as f:
 
 setup(
     name='colorz',
-    version='1.0.2',
+    version='1.0.3',
     description='Color scheme generator.',
     long_description=long_description,
     url='https://github.com/metakirby5/colorz',
@@ -42,4 +42,3 @@ setup(
         ],
     },
 )
-
