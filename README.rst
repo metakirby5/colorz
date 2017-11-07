@@ -4,7 +4,7 @@
 
 |Sample Usage|
 
-Color scheme generator.
+A k-means color scheme generator.
 
 Installation
 ------------
