@@ -17,6 +17,14 @@ or just move ``colorz.py`` to somewhere in your ``$PATH``.
 If you do the latter, you must install the dependencies in the
 following section manually.
 
+Arch Linux:
+
+::
+
+   git clone https://aur.archlinux.org/colorz.git
+   cd colorz
+   makepkg -si
+
 Dependencies
 ------------
 
